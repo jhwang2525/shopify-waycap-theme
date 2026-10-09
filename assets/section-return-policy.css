@@ -1,0 +1,109 @@
+.return-policy-section {
+  padding-block: 48px 72px;
+}
+
+.return-policy-section__inner {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.return-policy-section__header {
+  margin-bottom: 32px;
+}
+
+.return-policy-section__title {
+  margin: 0 0 12px;
+}
+
+.return-policy-section__intro {
+  color: rgb(var(--color-foreground));
+  opacity: 0.75;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Signature element: a bordered callout for the single most important
+   warning on the page (shipping address responsibility), so it can't
+   get lost in the surrounding text the way it did in the plain paragraph version. */
+.return-policy-section__callout {
+  border-left: 3px solid rgb(var(--color-foreground));
+  background: rgba(var(--color-foreground), 0.04);
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  border-radius: 0 4px 4px 0;
+}
+
+.return-policy-section__callout p {
+  margin: 0;
+  font-weight: 590;
+  line-height: 1.6;
+}
+
+.return-policy-section__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.return-policy-block__heading {
+  font-size: 1.25rem;
+  margin: 0 0 12px;
+}
+
+.return-policy-block__content,
+.return-policy-block__list-intro {
+  line-height: 1.7;
+  color: rgb(var(--color-foreground));
+}
+
+.return-policy-block__content p,
+.return-policy-block__list-intro {
+  margin: 0 0 12px;
+}
+
+.return-policy-block__content p:last-child {
+  margin-bottom: 0;
+}
+
+.return-policy-block__list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 1.6;
+}
+
+.return-policy-block__list li {
+  padding-left: 4px;
+}
+
+.return-policy-block--contact {
+  border-top: 1px solid rgba(var(--color-foreground), 0.12);
+  padding-top: 28px;
+}
+
+.return-policy-block__contact-details {
+  font-weight: 590;
+  margin: 0;
+}
+
+.return-policy-block__contact-details a {
+  color: rgb(var(--color-foreground));
+}
+
+.return-policy-block__divider {
+  border: none;
+  border-top: 1px solid rgba(var(--color-foreground), 0.12);
+  margin: 8px 0;
+}
+
+@media screen and (max-width: 749px) {
+  .return-policy-section {
+    padding-block: 32px 48px;
+  }
+
+  .return-policy-section__title {
+    font-size: 1.75rem;
+  }
+}
