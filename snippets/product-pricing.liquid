@@ -1,0 +1,64 @@
+{%- assign case_price_metafield = product.metafields.custom.case_price_per_piece -%}
+
+<!-- Display-only case price. Shopify's actual variant price remains unchanged. -->
+<li class="product-page--pricing--variant-price">
+  {% if case_price_metafield != blank %}
+
+    <!-- Normal Shopify price remains available to the theme but is hidden. -->
+    <span class="js case-price-source" id="price-field" aria-hidden="true">
+      <span class="money">{{ current_variant.price | money }}</span>
+    </span>
+
+    <!-- Visible case price -->
+    <span class="tagged-message">
+      from  
+    </span>
+
+    <span class="tagged-message"> 
+
+    </span>
+
+    <span class="money case-price-display">
+      {% render "hulk-custom-product-price" product: current_variant %}
+    </span>
+
+    <span class="tagged-message">
+      / Pc
+    </span>
+
+  {% else %}
+
+    <!-- Fall back to normal price if no case-price metafield is entered. -->
+    <span class="js" id="price-field">
+      {% if pick_an_option %}
+        <span class="type-subheading">
+          {{ 'products.product.make_a_selection' | t }}
+        </span>
+      {% else %}
+        <span class="money">
+          {{ current_variant.price | money }}
+        </span>
+      {% endif %}
+    </span>
+
+    <span class="tagged-message">/ Pc</span>
+
+  {% endif %}
+</li>
+
+{% if case_price_metafield != blank %}
+  <style>
+    #price-field.case-price-source {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+<!-- Variant compare-at price -->
+<li class="product-page--pricing--variant-compare-at-price">
+  <span class="compare-at-price js{% if case_price_metafield != blank or on_sale == false %} hide{% endif %}">
+    <span class="money">
+      {{ current_variant.compare_at_price | money }}
+    </span>
+  </span>
+</li>

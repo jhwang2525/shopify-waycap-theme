@@ -1,0 +1,26 @@
+<div data-value="{{ value | escape }}" class="swatch-element {% if is_color %}color {% endif %}{{ value | handle }} {% if available %}available{% else %}soldout{% endif %}">
+  <!-- <div class="tooltip">{{ variant.sku }} - {{ value }} </div> -->
+
+  <div class="tooltip">{{ value }} </div>
+  <span class="tooltip">{{ value }} </span>
+  <input id="{{ section.id }}-swatch-{{ option_index }}-{{ value | escape }}" type="radio" data-input="{{ swatch }}" data-name="{{ value }}" name="option-{{ option_index }}" value="{{ value | escape }}" class="wetheme-custom-radio"{% if firstChecked == 1 %} checked {% endif %} />
+
+  {% if is_color %}
+    <label
+      for="{{ section.id }}-swatch-{{ option_index }}-{{ value | escape }}"
+      style="background-color: {{ value | split: ' ' | last | handle }};
+      background-image: url({{ value | handle | append: '.png' | file_url }})"
+      tabindex="0"
+    >
+      <span class="sr-only">{{ value }}</span>
+      <img loading="lazy" class="crossed-out" src="{{ 'soldout_color.svg' | asset_url }}" alt="" />
+    </label>
+  {% else %}
+    <label
+      for="{{ section.id }}-swatch-{{ option_index }}-{{ value | escape }}"
+    >
+      <img loading="lazy" class="varian-images-c" src="{{ variant.image | img_url:"medium" }}"/>
+      <img loading="lazy" class="crossed-out" src="{{ 'soldout.svg' | asset_url }}" alt="" />
+    </label>
+  {% endif %}
+</div>

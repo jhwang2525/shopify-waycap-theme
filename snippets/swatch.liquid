@@ -1,0 +1,247 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% assign file_extension = 'png' %}
+
+{% if swatch == blank %}
+<div class="swatch error">
+  <p>You must include the snippet swatch.liquid with the name of a product option.</p>
+  <p>Use: <code>{% raw %}{% render 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% render 'swatch' with 'Color' %}{% endraw %}</code></p>
+</div>
+{% else %}
+
+{% assign found_option = false %}
+{% assign is_color = false %}
+{% assign option_index = 0 %}
+{% assign image_option_name = settings.image_swatch_option | downcase %}
+
+{% for option in product.options %}
+  {% if option == swatch %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+    {% assign downcased_option = option | downcase %}
+
+    {% if found_option and downcased_option == image_option_name %}
+      {% assign is_color = true %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% unless found_option %}
+<div class="swatch error">
+  <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+  <p>Use <code>{% raw %}{% render 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% render 'swatch' with 'Color' %}{% endraw %}</code></p>
+  <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+</div>
+{% else %}
+
+<div class="swatches-wrapper col-md-12 product_variant_title variant_custom">
+
+  {% assign group_swatch = false %}
+  {% for block in section.blocks %}
+    {% if block.type == 'swatch_group' and block.settings.group_option_name != blank %}
+      {% assign option_name = swatch | downcase %}
+      {% assign block_option_name = block.settings.group_option_name | downcase %}
+      {% if block_option_name == option_name %}
+        {% assign group_swatch = true %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if group_swatch %}
+    <fieldset>
+      <div class="swatch clearfix custom_swatch" data-option-index="{{ option_index }}">
+        {% liquid
+          assign all_group_values = ''
+          assign ct = 0
+          assign values = ''
+          for block in section.blocks
+            if block.type == 'swatch_group' and block.settings.group_option_name != blank
+              assign option_name = swatch | downcase
+              assign block_option_name = block.settings.group_option_name | downcase
+              if block_option_name == option_name
+                assign group_title = block.settings.group_title
+                assign group_values = block.settings.group_values | replace: ', ',',' | replace: ' ,',',' | split: ',' | sort_natural
+
+                capture allvalues
+                  for groupval in group_values
+                    for variant in product.variants
+                      assign value = variant.options[option_index] | escape
+                      assign groupVal = groupval | handleize
+                      assign finalval = value | handleize
+                      if groupVal == finalval
+                        assign ct = ct | plus: 1
+                        assign all_group_values = all_group_values | append: '╪' | append: value
+                        assign available = variant.available
+                        for v in product.variants
+                          if v.id != variant.id and v.options[option_index] == value and v.available
+                            assign available = true
+                          endif
+                        endfor
+
+                        assign hide = false
+                        if section.settings.hide_out_of_stock or block.settings.hide_out_of_stock
+                          if product.options_with_values.size == 1 and available == false
+                            assign hide = true
+                          endif
+                        endif
+
+                        unless values contains value or hide
+                          assign values = values | join: '╪'
+                          assign values = values | append: '╪' | append: value
+                          assign values = values | split: '╪'
+                          render 'swatch-group-value', value: value, variant: variant, is_color: is_color, section: section, option_index: option_index, available: available, firstChecked: ct
+                        endunless
+                      endif
+                    endfor
+                  endfor
+                endcapture
+
+                if group_title != blank and allvalues != blank
+                  echo '<legend class="swatch-title group-swatch" data-variant="'
+                  echo swatch
+                  echo '">'
+                  echo group_title
+                  if section.settings.size_guide_link != blank and section.settings.size_guide_message != blank
+                    assign option_name = swatch | downcase
+                    assign size_guide_variant = section.settings.size_guide_variant | downcase
+
+                    if option_name == size_guide_variant
+                      echo '<a href="'
+                      echo section.settings.size_guide_link
+                      echo 'class="size-guide-link">'
+                      echo section.settings.size_guide_message
+                      echo '</a>'
+                    endif
+
+                  endif
+                  echo '</legend>'
+                  echo allvalues
+                endif
+              endif
+            endif
+          endfor
+
+          assign allGroupValues = all_group_values | split: '╪' | uniq | join: '╪'
+          assign finalallGroupValues = allGroupValues | split: '╪'
+          assign allGroupValuesSize = finalallGroupValues.size | minus: 1
+        %}
+
+        {% if allGroupValuesSize != product.options_with_values[option_index].values.size %}
+          <legend class="swatch-title default-group-swatch" data-variant="{{ swatch }}">
+            {{ swatch }}
+            <!-- Size guide link (specific variant - swatches) -->
+            {% if section.settings.size_guide_link != blank and section.settings.size_guide_message != blank %}
+              {% assign option_name = swatch | downcase %}
+              {% assign size_guide_variant = section.settings.size_guide_variant | downcase %}
+
+              {% if option_name == size_guide_variant %}
+                <a href="{{ section.settings.size_guide_link }}" class="size-guide-link">
+                  {{ section.settings.size_guide_message }}
+                </a>
+              {% endif %}
+            {% endif %}
+          </legend>
+
+          {% liquid
+            for variant in product.variants
+              assign value = variant.options[option_index] | escape
+              assign show_value = false
+
+              assign firstChecked = 0
+              if allGroupValues.size == 0
+                assign show_value = true
+                assign firstChecked = forloop.index
+              endif
+
+              unless values contains value
+                assign available = variant.available
+                for v in product.variants
+                  if v.id != variant.id and v.options[option_index] == value and v.available
+                    assign available = true
+                  endif
+                endfor
+
+                assign hide = false
+                if section.settings.hide_out_of_stock or block.settings.hide_out_of_stock
+                  if product.options_with_values.size == 1 and available == false
+                    assign hide = true
+                  endif
+                endif
+
+                unless values contains value or hide
+                  assign values = values | join: '╪'
+                  assign values = values | append: '╪' | append: value
+                  assign values = values | split: '╪'
+                  render 'swatch-group-value', value: value, variant: variant, is_color: is_color, section: section, option_index: option_index, available: available, firstChecked: firstChecked
+                endunless
+              endunless
+            endfor
+          %}
+        {% endif %}
+      </div>
+    </fieldset>
+  {% else %}
+    <fieldset>
+      <legend class="swatch-title default-swatch" data-variant="{{ swatch }}">
+        {{ swatch }}
+        <!-- Size guide link (specific variant - swatches) -->
+        {% if section.settings.size_guide_link != blank and section.settings.size_guide_message != blank %}
+          {% assign option_name = swatch | downcase %}
+          {% assign size_guide_variant = section.settings.size_guide_variant | downcase %}
+
+          {% if option_name == size_guide_variant %}
+            <a href="{{ section.settings.size_guide_link }}" class="size-guide-link">
+              {{ section.settings.size_guide_message }}
+            </a>
+          {% endif %}
+        {% endif %}
+      </legend>
+
+      <div class="swatch clearfix custom_swatch" data-option-index="{{ option_index }}">
+
+        {%- comment -%}
+          Alphabetical variant value order (fix)
+          We sort the option values directly, then find a matching variant for each value.
+        {%- endcomment -%}
+
+        {% liquid
+          assign sorted_values = product.options_with_values[option_index].values | sort_natural
+
+          for value in sorted_values
+            assign matched_variant = nil
+            assign available = false
+
+            for variant in product.variants
+              if variant.options[option_index] == value
+                assign matched_variant = variant
+                if variant.available
+                  assign available = true
+                endif
+              endif
+            endfor
+
+            assign hide = false
+            if section.settings.hide_out_of_stock or block.settings.hide_out_of_stock
+              if product.options_with_values.size == 1 and available == false
+                assign hide = true
+              endif
+            endif
+
+            unless hide
+              render 'swatch-group-value', value: value, variant: matched_variant, is_color: is_color, section: section, option_index: option_index, available: available, firstChecked: forloop.index
+            endunless
+          endfor
+        %}
+      </div>
+    </fieldset>
+  {% endif %}
+</div>
+
+{% endunless %}
+
+{% endif %}

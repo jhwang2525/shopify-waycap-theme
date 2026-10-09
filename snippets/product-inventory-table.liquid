@@ -1,0 +1,82 @@
+{% assign show_table = true %}
+
+{% if block.settings.hide_for_tags != blank %}
+  {% assign allTags = block.settings.hide_for_tags | replace: ', ', ',' | replace: ' ,', ',' | split: ',' %}
+
+  {% for allT in allTags %}
+    {% for tag in product.tags %}
+      {% if tag == allT %}
+        {% assign show_table = false %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+{% if show_table %}
+  {% unless product.has_only_default_variant %}
+    <div class="variant-inventory-level rte">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'products.product.inventory_title' | t }}</th>
+            <th>{{ 'products.product.inventory' | t }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for variant in product.variants %}
+             {% liquid
+                assign inventory_text = variant.inventory_quantity
+                if variant.inventory_quantity > 5000
+                  assign inventory_text = 'products.product.inventory_quantity' | t
+                endif
+              %}
+            <tr
+              {% if forloop.index > 8 %}
+                style="display:none;"
+              {% endif %}
+            >
+              <td>{{ variant.title }}</td>
+              <td>{{ inventory_text }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if product.variants.size > 8 %}
+        <a href="javascript:void(0);" class="show_more_rows">{{ 'products.product.inventory_show_more' | t }}</a>
+        <a href="javascript:void(0);" class="show_less_rows" style="display: none;">
+          {{- 'products.product.inventory_show_less' | t -}}
+        </a>
+      {% endif %}
+    </div>
+
+    <style>
+      .variant-inventory-level { margin-bottom: 20px; } .variant-inventory-level table { width: 100%; text-align: center; } .variant-inventory-level th { font-weight: bold; } .variant-inventory-level th, .variant-inventory-level td { padding: 5px; } .variant-inventory-level.rte a { text-decoration: underline; width: 100%; display: block; text-align: center; margin: 10px 0; }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const inventoryTable = document.querySelector('.variant-inventory-level table'),
+              rows = inventoryTable.getElementsByTagName('tr'),
+              showMoreButton = document.querySelector('.show_more_rows'),
+              showLessButton = document.querySelector('.show_less_rows');
+          showMoreButton.addEventListener('click', function() {
+              for (let i = 8; i < rows.length; i++) {
+                  rows[i].style.display = '';
+              }
+              this.style.display = "none";
+              showLessButton.style.display = "block";
+          });
+          showLessButton.addEventListener('click', function() {
+              for (let i = 8; i < rows.length; i++) {
+                  rows[i].style.display = 'none';
+              }
+              this.style.display = "none";
+              showMoreButton.style.display = "block";
+          });
+      });
+    </script>
+  {% endunless %}
+{% endif %}

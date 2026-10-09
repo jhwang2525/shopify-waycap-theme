@@ -1,0 +1,409 @@
+{% if section.settings.category_menu != blank %}
+<div class="category-btn">
+   <button type="button" class="align-items-center category-menu btn">
+      <span class="i-icon i-icon-list-bottom">
+         <svg width="26" height="26" viewBox="0 0 48 48" fill="none">
+            <path d="M8 42C10.2091 42 12 40.2091 12 38C12 35.7909 10.2091 34 8 34C5.79086 34 4 35.7909 4 38C4 40.2091 5.79086 42 8 42Z" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+            <path d="M8 12C9.10457 12 10 11.1046 10 10C10 8.89543 9.10457 8 8 8C6.89543 8 6 8.89543 6 10C6 11.1046 6.89543 12 8 12Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+            <path d="M8 26C9.10457 26 10 25.1046 10 24C10 22.8954 9.10457 22 8 22C6.89543 22 6 22.8954 6 24C6 25.1046 6.89543 26 8 26Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+            <path d="M20 24H44" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+            <path d="M20 38H44" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+            <path d="M20 10H44" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+         </svg>
+      </span>
+      <b class="ms-4 text-base uppercase">{{ linklists[section.settings.category_menu].title | upcase }}</b>
+   </button>
+   <div class="absolute z-12 w-full category-dropdown">
+     <div class="relative flex h-126 flex-col rounded-lg 2xl:h-145.5 category-dropdown-in">
+       <div class="category-dropdown-wrp">
+         {% for link in linklists[section.settings.category_menu].links %}
+           <div class="group">
+                {% assign link_title = link.title | strip %}
+          
+                {% assign is_category_menu = false %}
+                {% if section.blocks.size > 0 %}
+                  {% for block in section.blocks %}
+                    {% assign block_title = block.settings.category-menu | strip %}
+                    {% if block_title == link_title  %}
+                      {% assign is_category_menu = true %}
+                      {% assign category_menu_block = block %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+             
+             <div class="relative z-1 h-10.5">
+                <a href="{{ link.url }}" class="flex h-full align-items-center justify-content-between px-4 group-hover" title="{{ link.title }}">
+                   <div class="flex align-items-center">
+                      <h3 class="text-sm">{{ link.title }}</h3>
+                      {% if category_menu_block.settings.show_hot_icon %}
+                      <div class="basic_image h-auto w-3"><img src="{{ 'picture.png' | file_url }}" alt="hot icon" class="h-full object-contain w-full"></div>
+                      {% endif %}
+                   </div>
+                   {% if is_category_menu %}
+                     <span class="i-icon i-icon-right flex align-items-center">
+                        <svg width="1em" height="1em" viewBox="0 0 48 48" fill="none">
+                           <path d="M19 12L31 24L19 36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                     </span>
+                   {% endif %}
+                </a>
+             </div>
+             {% if is_category_menu %}
+             <div class="category-drp-wrp absolute top-0 hidden h-full group-hover:block">
+                <div class="flex h-full overflow-hidden rounded-e-lg py-4">
+                   <div class="scrollbar h-full w-180 overflow-y-auto px-6">
+                     {% for i in (1..5) %}
+                       {% assign forloop_index = forloop.index %}
+                       {% capture title %}title_{{ i }}{% endcapture %}
+                       {% capture show_hot_icon %}show_hot_icon_{{ i }}{% endcapture %}
+                        <div class="{% unless forloop.first %}mt-8{% endunless %}">
+                           {% if category_menu_block.settings[title] != blank %}
+                           <a href="javascript:void(0)" class="mb-3 block cursor-pointer" title="Women's Shoes">
+                              <div class="flex items-center">
+                                 <span>{{ category_menu_block.settings[title] }}</span>
+                                  {% if category_menu_block.settings[show_hot_icon] %}
+                                    <div class="basic_image ms-1 w-3"><img src="{{ 'picture.png' | file_url }}" alt="hot icon" class="h-full object-contain w-full"></div>
+                                  {% endif %}
+                                 <span class="i-icon i-icon-right flex align-items-center text-xl">
+                                    <svg width="1em" height="1em" viewBox="0 0 48 48" fill="none">
+                                       <path d="M19 12L31 24L19 36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                 </span>
+                              </div>
+                           </a>
+                           {% endif %}
+                           <div class="grid grid-cols-6 gap-x-6 gap-y-4 text-xs">
+                              {% for i in (1..12) %}
+                                {% capture menu_title %}menu_title_{{ forloop_index }}{{ i }}{% endcapture %}
+                                {% capture menu_image %}menu_image_{{ forloop_index }}{{ i }}{% endcapture %}
+                                {% capture menu_url %}menu_url_{{ forloop_index }}{{ i }}{% endcapture %}
+                                {% if category_menu_block.settings[menu_image] != blank or category_menu_block.settings[menu_title] != blank %}
+                                <a href="{{ category_menu_block.settings[menu_url] }}" title="{{ category_menu_block.settings[menu_title] }}">
+                                  {% if category_menu_block.settings[menu_image] != blank %}
+                                   <div class="w-full">
+                                      <div class="basic_image ratio rounded-full">
+                                        {% render 'responsive-image' with category_menu_block.settings[menu_image], default_size: '335x500', class: 'h-full object-cover w-full' %}
+                                      </div>
+                                   </div>
+                                  {% endif %}
+                                  {% if category_menu_block.settings[menu_title] != blank %}
+                                   <div class="mt-2 flex flex-wrap justify-center text-center">
+                                      <span class="text-xs">{{ category_menu_block.settings[menu_title] }}</span><!---->
+                                   </div>
+                                  {% endif %}
+                                </a>
+                                {% endif %}
+                              {% endfor %}
+                           </div>
+                        </div>
+                     {% endfor %}
+                   </div>
+                   <div class="scrollbar h-full w-64 overflow-y-auto px-6">
+                      <div class="grid grid-cols-2 gap-6">
+                         {% if category_menu_block.settings.right_Cat-title != blank %}
+                         <div class="col-span-2">
+                            <div class="mx-auto w-52 rounded-md border text-center text-sm leading-9">{{ category_menu_block.settings.right_Cat-title }}</div>
+                         </div>
+                         {% endif %}
+                         <!-- 'rounded-lg' for type class -->
+                         {% for i in (1..10) %}
+                            {% capture right_menu_title %}right_menu_title_{{ i }}{% endcapture %}
+                            {% capture right_menu_image %}right_menu_image_{{ i }}{% endcapture %}
+                            {% capture right_menu_url %}right_menu_url_{{ i }}{% endcapture %}
+                            {% if category_menu_block.settings[right_menu_image] != blank or category_menu_block.settings[right_menu_title] != blank %}
+                            <div class="{% unless category_menu_block.settings.round_images %}col-span-2{% endunless %}">
+                              <a href="{{ category_menu_block.settings[right_menu_url] }}" class="mx-auto block cursor-pointer" title="Spring&amp;Autumn">
+                                 {% if category_menu_block.settings[right_menu_image] != blank %}<div class="w-full">
+                                    <div class="basic_image ratio{% if category_menu_block.settings.round_images %} rounded-1/2{% else %} rounded-lg{% endif %}">{% render 'responsive-image' with category_menu_block.settings[right_menu_image], default_size: '335x500', class: 'h-full object-cover w-full' %}</div>
+                                 </div>{% endif %}
+                                 {% if category_menu_block.settings[right_menu_title] != blank %}<div class="mt-2 px-1 text-center text-xs">{{ category_menu_block.settings[right_menu_title] }}</div>{% endif %}
+                              </a>
+                            </div>
+                            {% endif %}
+                         {% endfor %}
+                      </div>
+                   </div>
+                </div>
+             </div>
+             {% endif %}
+          </div>
+         {% endfor %}
+       </div>
+     </div>
+   </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryBtn = document.querySelector('.category-btn');
+    const categoryMenu = document.querySelector('.category-menu');
+
+    if (categoryBtn && categoryMenu) {
+      categoryMenu.addEventListener('mouseover', function() {
+        categoryBtn.classList.add('active');
+      });
+
+      categoryBtn.addEventListener('mouseout', function(event) {
+        if (!categoryBtn.contains(event.relatedTarget)) {
+          categoryBtn.classList.remove('active');
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .main-navigation-wrapper--center .nav {
+    background-color: unset;
+  }
+  .header-category-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    padding: 0 15px;
+  }
+  .category-btn {
+    position: relative;
+    padding: 10px 0;
+  }
+  .category-menu.btn {
+    width: 100%;
+    width: 100%;
+    display: flex;
+    border-radius: .5rem;
+    border: unset;
+    -webkit-appearance: button;
+    color: #fff;
+    background-color: #000;
+    margin: 0;
+  }
+  .category-menu b {
+      margin-left: 1rem;
+  }
+  .category-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 12;
+    width: 100%;
+    padding-top: 10px;
+  }
+  .category-btn.active .category-dropdown, 
+  .category-btn.active .category-dropdown {
+    display: block;
+  }
+  .category-dropdown .category-dropdown-in {
+    position: relative;
+    display: flex;
+    height: 31.5rem;
+    flex-direction: column;
+    border-radius: .5rem;
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+    background-color: #fff;
+  }
+  .category-dropdown .category-dropdown-wrp {
+      height: 100%;
+      overflow-y: hidden;
+  }
+  .category-dropdown-wrp .flex {
+    display: flex;
+  }
+  .category-dropdown-wrp .relative {
+    position: relative;
+  }
+  .category-dropdown-wrp .absolute {
+    position: absolute;
+  }
+  .category-dropdown-wrp .hidden {
+    display: none;
+  }
+  .category-dropdown-wrp .overflow-hidden {
+    overflow: hidden;
+  }
+  .category-dropdown-wrp .h-full {
+    height: 100%
+  }
+  .category-dropdown-wrp .top-0 {
+    top: 0;
+  }
+  .category-dropdown-wrp .basic_image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin-left: .25rem;
+  }
+  .category-dropdown-wrp .w-3 {
+      width: .75rem;
+  }
+  .category-dropdown-wrp .h-auto {
+      height: auto;
+  }
+  .category-dropdown-wrp .text-sm {
+    font-size: .875rem;
+    line-height: 1.25rem;
+    margin: 0;
+  }
+  .category-dropdown-wrp .h-10\.5 {
+      height: 2.625rem;
+  }  
+  .category-dropdown-wrp .z-1 {
+      z-index: 1;
+  }
+  .category-dropdown-wrp .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .category-dropdown-wrp .py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .category-dropdown-wrp .px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .category-dropdown-wrp .group:hover .group-hover {
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .08);
+    --tw-shadow-colored: 0px 4px 16px 0px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+  .category-dropdown-wrp .group:hover .group-hover {
+      color: #339999;
+  }
+  .category-dropdown-wrp .group:hover .group-hover\:block,
+  .category-dropdown-wrp .group:focus .group-hover\:block {
+    display: block;
+  }
+  .category-dropdown-wrp .category-drp-wrp {
+    padding-inline-start: 100%;
+    inset-inline-start: 0px;
+    background-color: #fff;
+  }
+  .category-dropdown-wrp .rounded-e-lg {
+    border-start-end-radius: .5rem;
+    border-end-end-radius: .5rem;
+  }
+  .category-dropdown-wrp .rounded-full {
+    border-radius: 50%;
+  }
+  .category-dropdown-wrp .overflow-y-auto {
+      overflow-y: auto;
+  }
+  .category-dropdown-wrp .w-64 {
+      width: 16rem;
+  }
+  .category-dropdown-wrp .w-180 {
+    width: 45rem;
+  }
+  .category-dropdown-wrp .cursor-pointer {
+      cursor: pointer;
+  }
+  .category-dropdown-wrp .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .category-dropdown-wrp .col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  .category-dropdown-wrp .gap-y-4 {
+      row-gap: 1rem;
+  }
+  .category-dropdown-wrp .gap-x-6 {
+      -moz-column-gap: 1.5rem;
+      column-gap: 1.5rem;
+  }
+  .category-dropdown-wrp .grid-cols-6 {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .category-dropdown-wrp .grid {
+      display: grid;
+  }
+  .category-dropdown-wrp .block {
+      display: block;
+  }
+  .category-dropdown-wrp .text-xs {
+    font-size: .75rem;
+    line-height: 1rem;
+  }
+  .category-dropdown-wrp .mt-2 {
+    margin-top: .5rem;
+  }
+  .category-dropdown-wrp .text-center {
+      text-align: center;
+  }
+  .category-dropdown-wrp .justify-center {
+      justify-content: center;
+  }
+  .category-dropdown-wrp .flex-wrap {
+      flex-wrap: wrap;
+  }
+  .category-dropdown-wrp .flex {
+      display: flex;
+  }
+  .category-dropdown-wrp .mb-3 {
+      margin-bottom: .75rem;
+  }
+  .category-dropdown-wrp .basic_image.ratio {
+    position: relative;
+    padding-top: 100%;
+  }
+  .category-dropdown-wrp .basic_image.ratio img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .category-dropdown-wrp .basic_image img {
+    display: block;
+    overflow: hidden;
+  }
+  .category-dropdown-wrp .object-cover {
+    object-fit: cover;
+  }
+  .category-dropdown-wrp .object-contain {
+    object-fit: contain;
+  }
+  .category-dropdown-wrp .bg-custom-f7 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(247 247 247 / var(--tw-bg-opacity));
+  }
+  .category-dropdown-wrp .rounded-1\/2 {
+    border-radius: 50%;
+  }
+  .category-dropdown-wrp .px-1 {
+    padding-left: .25rem;
+    padding-right: .25rem;
+  }
+  .category-dropdown-wrp .text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .category-dropdown-wrp .gap-6 {
+    gap: 1.5rem;
+  }
+  .category-dropdown-wrp .mt-8 {
+    margin-top: 2rem;
+  }
+  .category-dropdown-wrp .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .category-dropdown-wrp .hover\:overflow-y-auto:hover {
+    overflow-y: auto;
+  }
+  .category-dropdown-wrp .rounded-md {
+    border-radius: .375rem;
+  }
+  .category-dropdown-wrp .leading-9 {
+    line-height: 2.25rem;
+  }
+  @media (max-width: 1200px) {
+    .category-drp-wrp .overflow-hidden {
+      overflow-y: auto !important;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+{% endif %}
