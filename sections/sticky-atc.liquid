@@ -1,0 +1,625 @@
+{% if section.settings.enable_section and request.page_type == 'product' and product.available %}
+  {% liquid
+    assign current_variant = product.selected_or_first_available_variant
+    assign product_form_id = 'product-form-' | append: section.id
+    assign image = current_variant.image | default: product.featured_image
+    assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height
+  %}
+
+  <style>    
+    .slideout-open #md-sticky-atc.show {
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    
+    #md-sticky-atc {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9;
+        background: white;
+        padding: 10px var(--column-gap-width-half);
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-100%);
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+    }
+
+    #md-sticky-atc.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    #md-sticky-atc .page-width-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #md-sticky-atc .product-content {
+        display: flex;
+        align-items: center;
+    }
+
+    #md-sticky-atc .product-content img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    #md-sticky-atc .product-content .product__title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    #md-sticky-atc .product-content .price {
+        font-size: 14px;
+        color: #333;
+    }
+
+    #md-sticky-atc .product-form {
+        display: flex;
+        align-items: center;
+    }
+
+    #md-sticky-atc .product-form select {
+        padding: 8px;
+        border-radius: 4px;
+        margin-right: 10px;
+        font-size: 14px;
+        color: #000;
+    }
+
+    #md-sticky-atc .product-form .quantity {
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-right: 10px;
+    }
+
+    #md-sticky-atc .product-form .quantity button {
+       display: none; /* Hides the - and + buttons */
+        background: none;
+        border: none;
+        padding: 5px 10px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    #md-sticky-atc .product-form .quantity input {
+        width: 50px; /* Reduce width of input field */
+        text-align: center;
+        font-size: 14px;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    #md-sticky-atc .product-form .product-form__submit {
+        background: #008060;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+        width: auto;
+        font-size: 12px !important;
+        right: 0;
+        margin: 0 !important;
+    }
+
+    #md-sticky-atc .product-form .quantity-controls__outer {
+        margin: 0;
+    }
+
+    #md-sticky-atc .product-form .quantity-controls {
+        width: 100%;
+        max-width: 90px;
+        border-radius: 5px;
+    }
+
+    #md-sticky-atc .product-form .quantity-controls .qty-minus {
+        border-radius: 5px 0 0 5px;
+    }
+
+    #md-sticky-atc .product-form .quantity-controls .qty-plus {
+        border-radius: 0 5px 5px 0;
+    }
+    
+    #md-sticky-atc .product-form .quantity-controls button, #md-sticky-atc .product-form .quantity-controls input {
+      height: 100%;
+      line-height: normal;
+      padding: 8px 5px;
+    }
+    
+    #md-sticky-atc .product-form .product-form__submit:hover {
+        background: linear-gradient(to right, #ff9900, #ff6600);
+    }
+
+    #md-sticky-atc .quantity-input-wrapper {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+
+    #md-sticky-atc .quantity-input-wrapper .qty-wrapper {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .variant--thumb-nail {
+        width: 22px;
+        border-radius: 50px;
+        position: relative;
+        padding-top: 22px;
+    }
+    
+    .variant--thumb-nail img {
+        object-fit: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+
+    #md-sticky-atc .sticky-product-info {
+        text-align: left;
+    }
+
+    @media (max-width: 768px) {
+        #md-sticky-atc .page-width-inner {
+            /* flex-direction: column; */
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+        }
+      
+        #md-sticky-atc .product-content {
+          width: 100%;
+          max-width: 40%;
+        }
+
+        #md-sticky-atc .product-form {
+            flex-direction: column;
+            width: 100%;
+            flex: 1;
+        }
+      
+        #md-sticky-atc .quantity-input-wrapper,
+        #md-sticky-atc .product-form .product-form__submit {
+            /* width: 100%; */
+            justify-content: flex-end;
+            margin-top: 0;
+        }
+
+        #md-sticky-atc .product-form .product-form__submit {
+            padding: 10px 10px;
+        }
+    }
+
+    @media (max-width: 575px) {      
+        #md-sticky-atc .product-content .product__title {
+            font-size: 12px;
+        }
+      
+        #md-sticky-atc .product-content img {
+          width: 50px;
+          height: 50px;
+          margin: 0;
+          padding: 5px;
+        }
+
+        #md-sticky-atc .product-page--pricing .product-page--pricing--variant-compare-at-price, 
+        #md-sticky-atc .product-page--pricing .product-page--pricing--variant-price {
+            font-size: 10px;
+        }
+
+        .hulkapps-volumes .offer-options-list .offer-option_txt {
+            width: 100%;
+            max-width: 40%;
+        }
+
+        .hulkapps-volumes .offer-options-list .offer-option_price {
+          flex: 1;
+        }
+
+        #md-sticky-atc .product-form select {
+          margin-right: 0;
+        }
+    }
+
+    @media (max-width: 390px) {
+        #md-sticky-atc .product-form .product-form__submit {
+            padding: 10px 5px;
+        }
+        #md-sticky-atc .product-form select {
+            font-size: 10px;
+        }
+        #md-sticky-atc .product-form .quantity-controls button, #md-sticky-atc .product-form .quantity-controls input {
+            font-size: 12px;
+        }
+        #md-sticky-atc .product-form .product-form__submit {
+            font-size: 10px !important;
+        }
+
+        #md-sticky-atc .product-form .product-form__submit {
+            padding: 5px;
+        }
+    }
+
+    @media (max-width: 320px) {
+        #md-sticky-atc .page-width-inner {
+          flex-direction: column;
+        }
+        #md-sticky-atc .product-content {
+          max-width: 100%;
+        }
+        #md-sticky-atc .quantity-input-wrapper {
+          flex-wrap: nowrap;
+        }
+    }      
+  </style>
+
+  <script>
+        window.addEventListener('DOMContentLoaded', (event) => {            
+            // sticky atc
+            const stickyATC = document.querySelector('#md-sticky-atc');
+            const img = stickyATC.querySelector('.product-content img');
+            const btn = stickyATC.querySelector('[name="add"]');
+            const btnSpinner = btn.querySelector('.loading__spinner');
+            const selectField = stickyATC.querySelector('select[name="id"]');
+            const thumbnailImage = stickyATC.querySelector('.variant--thumb-nail img');
+            const threshold = document.querySelector('button[name="add"]').getBoundingClientRect().bottom + Number(stickyATC.dataset.offset);
+            const header = document.querySelector('.header-wrapper');
+            const stickyFormData = new FormData(stickyATC.querySelector('form'));
+          
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > threshold) {
+                    stickyATC.classList.add('show')
+                    document.documentElement.style.paddingBottom = `${stickyATC.clientHeight}px`
+                    document.documentElement.style.height = 'auto';
+                    if (header.classList.contains('stuck')) {
+                      var stickyTop = header.querySelector('.sticky-header-wrapper').clientHeight;
+                      stickyATC.style.top = `${stickyTop}px`;
+                    }
+                } else {
+                    stickyATC.style.top = '0px';
+                    stickyATC.classList.remove('show')
+                    document.documentElement.style.paddingBottom = '0'
+                }
+            })
+
+            if (selectField) {
+                selectField.addEventListener('change', () => {
+                    img.setAttribute('src', selectField.options[selectField.selectedIndex].dataset.img);
+                    if (thumbnailImage) thumbnailImage.setAttribute('src', selectField.options[selectField.selectedIndex].dataset.img)
+                })
+            }
+
+            document.querySelector('.product-form [name="id"]')?.addEventListener('change', (e) => {
+                const value = Number(e.target.value)
+
+                if (value) {
+                    selectField.value = value
+                }
+            });
+
+            // sticky quantity selector
+            $('.stky-quantity-controls__outer button.qty-plus').off().on('click', function (e) {
+              e.preventDefault();
+              var qtyInput = $(this).closest('.quantity-controls').find('input.quantity-selector');
+              var step = parseInt(qtyInput.attr('step')) || 1;
+              var stockAmt = $(this).closest('.quantity-controls').data('stock-count');
+              let inventoryPolicy = $(this).closest('.quantity-controls').data('inventory-policy');
+              let inventoryManagement = $(this).closest('.quantity-controls').data('inventory-management');
+              var errorMsg = $(this).parent().next();
+              const val = parseInt(qtyInput.val().toString(), 10);
+          
+              var newVal = val + step;
+          
+              if (stockAmt) {
+                  if (newVal <= stockAmt || inventoryPolicy === "continue" || inventoryManagement !== "shopify") {
+                      qtyInput.val(newVal);
+                  } else {
+                      errorMsg.removeClass('d-none');
+                      qtyInput.val(stockAmt);
+                  }
+              } else {
+                  qtyInput.val(newVal);
+              }
+            });
+          
+            $('.stky-quantity-controls__outer button.qty-minus').off().on('click', function (e) {
+              e.preventDefault();
+              var qtyInput = $(this).closest('.quantity-controls').find('input.quantity-selector');
+              var step = parseInt(qtyInput.attr('step')) || 1;
+              var stockAmt = $(this).closest('.quantity-controls').data('stock-count');
+              let inventoryPolicy = $(this).closest('.quantity-controls').data('inventory-policy');
+              let inventoryManagement = $(this).closest('.quantity-controls').data('inventory-management');
+              var errorMsg = $(this).parent().next();
+              const val = parseInt(qtyInput.val().toString(), 10);
+          
+              var newQty = val - step < step ? step : val - step; // Ensure the minimum value follows step
+          
+              qtyInput.val(newQty);
+            });
+
+            $("body").on("click", "#sticky-purchase", function (e) {
+              if ($(this).data('cart-action') == 'drawer') {
+                e.preventDefault();
+                var _this = $(this),
+                  _this_text = _this.find("span:not(.icon)").html(), form = $(this).closest("form");
+                _this
+                  .attr("disabled", "disabled")
+                  .find("span:not(.icon)")
+                  .html("Adding...");
+                
+                $.ajax({
+                  type: "POST",
+                  url: "/cart/add",
+                  data: form.serialize(),
+                  dataType: "json",
+                  error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                  },
+                }).done(function (data) {
+                  if (window.productInstance && typeof window.productInstance.updateCart === "function") {
+                    window.productInstance.updateCart();
+                  }
+                  document.dispatchEvent(new CustomEvent('cart:added'));
+                  _this
+                  .removeAttr("disabled")
+                  .find("span:not(.icon)")
+                  .html(_this_text);
+                });
+              }
+            });
+        })
+  </script>
+
+  <div
+    id="md-sticky-atc"
+    class="color-scheme-1"
+    aria-hidden="true"
+    data-offset="{{ section.settings.offset }}"
+  >
+    <div class="page-width">
+      <div class="page-width-inner">
+        <div class="product-content">
+          {% if section.settings.show_img %}
+            <img
+              src="{{ image | img_url: img_size, crop: 'center' }}"
+              class=""
+              width="{{ section.settings.img_width }}"
+              height="{{ section.settings.img_height }}"
+              loading="lazy"
+            >
+          {% endif %}
+          <div class="sticky-product-info">
+            <h3 class="product__title {{ section.settings.title_size }}">
+              {{ product.title }}
+            </h3>
+            <ul class="product-page--pricing discount-badge">
+              {% render 'product-pricing', current_variant: current_variant, product: product %}
+              {% render 'unit-price-measurement-variant', current_variant: current_variant %}
+            </ul>
+          </div>
+        </div>
+        <product-form class="product-form">
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
+              <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+              <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+              <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+              <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+            </svg>
+            <span class="product-form__error-message"></span>
+          </div>
+          {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate' -%}
+            <input type="hidden" id="cart-link" value="{{ routes.cart_url }}" />
+            <div class="quantity-input-wrapper">
+              <div class="variant--thumb-nail">
+                <img src="{{ image | img_url: img_size, crop: 'center' }}" alt="variant thumb">
+              </div>
+              <div class="select form-vertical" style="{% if product.has_only_default_variant %}display: none;{% endif %}">
+                <wetheme-dropdown fit="parent">
+                  <select class="wetheme-dropdown__select" name="id" aria-label="Select variant">
+                    {% for variant in product.variants %}
+                      {% assign variant_image = variant.image | default: product.featured_image %}
+                      <option
+                        value="{{ variant.id }}"
+                        data-img="{{ variant_image | img_url: img_size }}"
+                        {% if current_variant.id == variant.id %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ variant.title }} - {{ variant.price | money }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </wetheme-dropdown>
+              </div>
+              <div class="qty-wrapper">
+                {% if section.settings.show_quantity_input %}
+                  <div
+                    class="stky-quantity-controls__outer quantity-controls__outer {% if settings.show_swatches %}swatches-wrapper{% else %}selector-wrapper{% endif %}">
+                    <label class="hide" for="quantity">{{ 'products.product.quantity' | t }}</label>
+                    <div class="qty-sel-wrapper">
+                      <div class="quantity-controls">
+                        <button
+                          type="button"
+                          class="qty-minus alt-focus"
+                          aria-label="Reduce item quantity by one"
+                        >
+                          -
+                        </button>
+                        <input
+                          id="quantity"
+                          class="quantity-selector"
+                          value="1"
+                          min="1"
+                          type="text"
+                          name="quantity"
+                          readonly
+                        >
+                        <button
+                          type="button"
+                          class="qty-plus alt-focus"
+                          aria-label="Increase item quantity by one"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% unless current_variant.available %}
+                  {% assign disabled = true %}
+                {% endunless %}
+                <button
+                  type="submit"
+                  name="add"
+                  id="sticky-purchase"
+                  class="btn product-form__submit"
+                  {% if disabled %}disabled{% endif %}
+                  data-cart-action="{{ settings.cart-action }}"
+                >
+                 {%- if current_variant.available and current_variant.inventory_policy == "continue" and current_variant.inventory_quantity <= 0 -%}
+                      {{ 'products.product.Pre-Order' | t }}
+                 {%- elsif current_variant.available -%}
+                       {{ 'products.product.add_to_cart' | t }}
+                 {% else %}
+                    {{ 'products.product.sold_out' | t }}
+                 {%- endif -%}      
+                </button>
+              </div>
+            </div>
+          {% endform %}
+        </product-form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Sticky ATC",
+    "settings": [
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_section",
+            "label": "Enable \"Sticky ATC\"",
+            "info": "Quickly enable or disable this feature",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Title Size",
+            "default": "h4",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_img",
+            "default": true,
+            "label": "Show image"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "default": "80",
+            "label": "Image width (px)"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "default": "80",
+            "label": "Image height (px)"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_quantity_input",
+            "default": true,
+            "label": "Show quantity field"
+        },
+        {
+            "type": "select",
+            "id": "btn_style",
+            "options": [
+                { "value": "primary", "label": "Primary" },
+                { "value": "secondary", "label": "Secondary" }
+            ],
+            "default": "primary",
+            "label": "'Add to cart' button style"
+        },
+        {
+            "type": "header",
+            "content": "Advanced"
+        },
+        {
+            "type": "range",
+            "id": "offset",
+            "label": "Offset",
+            "min": 0,
+            "max": 500,
+            "step": 10,
+            "default": 0,
+            "info": "Adjust the offset value when showing the Sticky ATC section related to the main product form."
+        },
+        {
+            "type": "header",
+            "content": "Spacing",
+            "info": "Based on 'rem' values [Learn more](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units)"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding top",
+            "min": 0,
+            "max": 5,
+            "step": 0.5,
+            "default": 0.5
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 5,
+            "step": 0.5,
+            "default": 0.5
+        }
+    ]
+}
+{% endschema %}

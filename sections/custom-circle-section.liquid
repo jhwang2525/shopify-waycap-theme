@@ -1,0 +1,112 @@
+<!-- sections/custom-circle-section.liquid -->
+
+<div class="custom-circle-section">
+<div class="color-{{ section.settings.color_scheme }} isolate gradient">
+<h2>{{ section.settings.section_title }}</h2>
+{% for block in section.blocks %}
+<div class="circle-content">
+<a href="{{ block.settings.link }}">
+<img src="{{ block.settings.subarna | img_url: 'medium' }}" alt="{{ block.settings.product_title }}">
+</a>
+<h3>{{ block.settings.product_title }}</h3>
+</div>
+{% endfor %}
+</div>
+</div>
+
+<style>
+/* custom-circle-section.css */
+
+.custom-circle-section {
+text-align: center;
+margin-top: px;
+background-color: #f5f5f5; /* Set your desired background color here */
+}
+
+.circle-content {
+display: inline-block;
+margin: 15px;
+}
+
+.circle-content img {
+width: 95px; /* Adjust the width as needed */
+height: 95px; /* Adjust the height as needed */
+border-radius: 60%; /* Create a circular shape */
+overflow: hidden; /* Hide overflowing content beyond the border-radius */
+margin-bottom: 10px;
+}
+
+.circle-content h3 {
+font-size: 18px;
+margin-bottom: 5px;
+}
+
+.circle-content a {
+text-decoration: none;
+color: #333; /* Set link color */
+}
+
+.circle-content a:hover {
+text-decoration: underline;
+}
+
+/* Additional styling for the section title */
+.custom-circle-section h2 {
+font-size: 24px;
+margin-bottom: 20px;
+}
+</style>
+<!-- snippets/custom-circle-section-schema.liquid -->
+
+{% comment %}
+Custom Circle Section Schema
+{% endcomment %}
+{% schema %}
+{
+"name": "Custom Circle Section",
+"class": "custom-circle-section",
+"settings": [
+{
+"type": "text",
+"label": "Section Title",
+"id": "section_title",
+"default": "Featured Products"
+}
+
+],
+"blocks": [
+{
+"type": "circle_content",
+"name": "Call to action",
+"settings": [
+{
+"type": "image_picker",
+"label": "Product Image",
+"id": "subarna"
+},
+{
+"type": "text",
+"label": "Product Title",
+"id": "product_title",
+"default": "Product Title"
+},
+
+{
+"id": "link",
+"type": "url",
+"label": "Button link"
+}
+
+ 
+
+]
+}
+],
+"presets": [
+{
+"category": "custom",
+"name": "Custom Circle Section"
+}
+]
+}
+{% endschema %}

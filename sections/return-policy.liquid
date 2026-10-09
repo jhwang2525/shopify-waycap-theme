@@ -1,0 +1,222 @@
+{{ 'section-return-policy.css' | asset_url | stylesheet_tag }}
+
+<div class="return-policy-section color-{{ section.settings.color_scheme }}">
+  <div class="return-policy-section__inner page-width">
+
+    <div class="return-policy-section__header">
+      <h1 class="return-policy-section__title">{{ section.settings.heading }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <div class="return-policy-section__intro">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.callout_text != blank -%}
+      <div class="return-policy-section__callout">
+        <p>{{ section.settings.callout_text }}</p>
+      </div>
+    {%- endif -%}
+
+    <div class="return-policy-section__blocks">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+          {%- when 'text_block' -%}
+            <div class="return-policy-block" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="return-policy-block__heading">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.content != blank -%}
+                <div class="return-policy-block__content">{{ block.settings.content }}</div>
+              {%- endif -%}
+            </div>
+
+          {%- when 'list_block' -%}
+            <div class="return-policy-block" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="return-policy-block__heading">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.intro != blank -%}
+                <p class="return-policy-block__list-intro">{{ block.settings.intro }}</p>
+              {%- endif -%}
+              {%- if block.settings.items != blank -%}
+                <ul class="return-policy-block__list">
+                  {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+                  {%- for item in items -%}
+                    {%- assign trimmed_item = item | strip -%}
+                    {%- if trimmed_item != blank -%}
+                      <li>{{ trimmed_item }}</li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+          {%- when 'divider' -%}
+            <hr class="return-policy-block__divider" {{ block.shopify_attributes }}>
+
+          {%- when 'contact_note' -%}
+            <div class="return-policy-block return-policy-block--contact" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="return-policy-block__heading">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="return-policy-block__list-intro">{{ block.settings.text }}</p>
+              {%- endif -%}
+              <p class="return-policy-block__contact-details">
+                {%- if block.settings.phone != blank -%}
+                  <a href="tel:{{ block.settings.phone | remove: '-' | remove: ' ' }}">{{ block.settings.phone }}</a>
+                {%- endif -%}
+                {%- if block.settings.phone != blank and block.settings.email != blank -%}
+                  <span class="return-policy-block__contact-divider">&nbsp;&middot;&nbsp;</span>
+                {%- endif -%}
+                {%- if block.settings.email != blank -%}
+                  <a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a>
+                {%- endif -%}
+              </p>
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Return & Shipping Policy",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Return & Shipping Policy"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text"
+    },
+    {
+      "type": "richtext",
+      "id": "callout_text",
+      "label": "Highlighted callout text",
+      "info": "Use for the most important warning, e.g. shipping address responsibility. Leave blank to hide."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "Text section",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "content", "label": "Content" }
+      ]
+    },
+    {
+      "type": "list_block",
+      "name": "List section",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "intro", "label": "Intro text (optional)" },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "List items",
+          "info": "One item per line."
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "name": "Divider"
+    },
+    {
+      "type": "contact_note",
+      "name": "Contact info",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text (optional)" },
+        { "type": "text", "id": "phone", "label": "Phone number", "default": "213-302-6666" },
+        { "type": "text", "id": "email", "label": "Email", "default": "info@waycaps.com" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Return & Shipping Policy",
+      "settings": {
+        "callout_text": "<p>It's the buyer's responsibility to provide the correct shipping address on the order \u2014 if an order was placed with an incorrect address, we're not able to take responsibility for correcting it.</p>"
+      },
+      "blocks": [
+        {
+          "type": "list_block",
+          "settings": {
+            "heading": "Re-shipping Costs",
+            "intro": "<p>If a package is refused or returned for either of the reasons below, the customer is responsible for the re-shipping cost \u2014 and must agree to cover the original shipping cost before we re-send it.</p>",
+            "items": "Incorrect information was submitted by the customer, and the customer approved the shipment.\nThe customer approved shipment but wasn't able to receive the box from the courier."
+          }
+        },
+        {
+          "type": "text_block",
+          "settings": {
+            "heading": "How to Return an Item",
+            "content": "<p>We're sorry if you're not 100% satisfied with the items you received. We accept return requests for most items within <strong>14 days</strong> after you signed for the parcel.</p><p>Once your Customer Manager approves the return, they'll send you the return address. Package up the item(s) using the original packaging and ship them back.</p>"
+          }
+        },
+        {
+          "type": "text_block",
+          "settings": {
+            "heading": "Refund Processing",
+            "content": "<p>Most returns are processed within <strong>3\u20135 business days</strong> after we receive your package. Refunds are issued as store credit by default, unless you let us know in advance that you'd like the refund sent to your original payment method. Credit can be used on your next purchase or withdrawn from your account. You'll get a confirmation email once your refund is issued.</p>"
+          }
+        },
+        {
+          "type": "list_block",
+          "settings": {
+            "heading": "Return Conditions",
+            "items": "You have 14 days from the date you signed for the parcel to request a return.\nReturned items must be unused and in their original packaging \u2014 we can't accept items that have been worn, damaged, washed, or altered.\nItems with non-returnable marks and free gifts can't be returned.\nWe don't accept returns sent back without a proper return request.\nWe don't offer Freight To Collect (FTC) for returned packages \u2014 return shipping is the customer's responsibility.\nDamaged, defective, or incorrect items must be reported within 2 days of delivery to qualify for store credit.\nA 10% stocking fee applies to all returns, except for defective, broken, or incorrectly shipped items."
+          }
+        },
+        { "type": "divider" },
+        {
+          "type": "text_block",
+          "settings": {
+            "heading": "Processing Times",
+            "content": "<p>Most orders ship from our Los Angeles warehouse, with some items fulfilled from additional locations depending on the brand. Standard handling time before an order ships is <strong>1\u20133 business days</strong>.</p><p>During periods of high order volume, processing may take a bit longer, and backordered styles or colors may need extra time before they ship.</p><p>Need your order sooner, or want to check on its status or stock? Email us or give us a call and we'll do what we can to help.</p>"
+          }
+        },
+        {
+          "type": "text_block",
+          "settings": {
+            "heading": "Tracking",
+            "content": "<p>Tracking numbers can take <strong>1\u20132 business days</strong> to start updating. With USPS in particular, tracking sometimes doesn't reflect movement until the package reaches the destination sort facility. If your order includes multiple items shipping from different locations, it may take a little longer to consolidate everything before it goes out.</p>"
+          }
+        },
+        {
+          "type": "list_block",
+          "settings": {
+            "heading": "Good to Know",
+            "items": "Choosing 2-Day or 3-Day shipping speeds up transit time, not processing time \u2014 orders still ship within our standard handling window unless we've confirmed an earlier ship date with you directly.\nWeather, carrier service interruptions, seasonal staffing shortages, and other events outside our control can delay transit, and we're not able to take responsibility for these delays.\nFor some destinations, Ground shipping can actually arrive faster than 2-Day or 3-Day options, especially within the same state or region \u2014 we reserve the right to choose whichever service is likely to arrive fastest.\nOnce a carrier confirms delivery to the address on file, that delivery scan is treated as proof of delivery. If your package doesn't arrive despite a delivery scan, we'll help you file a claim and request GPS verification from the carrier."
+          }
+        },
+        {
+          "type": "contact_note",
+          "settings": {
+            "heading": "Questions About Your Order?",
+            "text": "<p>We're happy to help with returns, processing times, tracking, or anything else.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

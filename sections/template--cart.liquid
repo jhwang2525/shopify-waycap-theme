@@ -1,0 +1,986 @@
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.shopify-section.container.cart-page-template {
+  background-color: #ffffff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.bb-cart-wrapper {
+  background: #fff;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.bb-cart-page {
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  min-height: 100vh;
+  align-items: stretch;
+  background: #fff;
+  width: 100%;
+}
+
+.bb-cart-left {
+  padding: 40px;
+  background: #fff;
+  min-width: 0;
+}
+
+.bb-cart-right {
+  background: #f2f2f0;
+  padding: 40px;
+  min-height: 100%;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.bb-cart-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.bb-cart-items {
+  margin-top: 24px;
+}
+
+.bb-cart-item {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 16px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.bb-cart-item:first-child {
+  border-top: 1px solid #e0e0e0;
+}
+
+.bb-item-image {
+  width: 88px;
+  height: 88px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.bb-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bb-item-details {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.bb-item-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.bb-item-meta {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.bb-item-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: fit-content;
+  margin-top: 8px;
+}
+
+.bb-item-qty button {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-item-qty button:hover {
+  background: #f5f5f5;
+}
+
+.bb-item-qty input {
+  width: 40px;
+  height: 32px;
+  border: none;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  background: #fff;
+  -moz-appearance: textfield;
+}
+
+.bb-item-qty input::-webkit-outer-spin-button,
+.bb-item-qty input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.bb-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 116px;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.bb-item-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.bb-item-remove:hover { color: #111; }
+
+.bb-item-remove svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bb-item-price {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.bb-item-price del {
+  font-size: 13px;
+  font-weight: 400;
+  color: #999;
+  display: block;
+}
+
+.hulkapps-reminder {
+  margin: 6px 0;
+}
+
+.hulkapps-reminder-msg {
+  font-size: 12px;
+  color: #e28902;
+  background: #fff8e6;
+  padding: 4px 8px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.bb-cart-note {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.bb-cart-note label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.bb-cart-note textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #111;
+  resize: vertical;
+  min-height: 80px;
+  background: #fff;
+  font-family: inherit;
+}
+
+.bb-also-like {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.bb-also-like h3 {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.bb-also-like-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.bb-also-like-item {
+  text-decoration: none;
+  color: #111;
+}
+
+.bb-also-like-item:hover .bb-also-like-img { opacity: 0.85; }
+
+.bb-also-like-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #f5f5f5;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.bb-also-like-name {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.bb-also-like-price {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.bb-order-summary-title {
+  font-size: 25px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #111;
+  text-align: center;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.bb-summary-rows {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.bb-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid #ddd;
+}
+
+.bb-summary-row:last-child { border-bottom: none; }
+
+.bb-summary-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-top: 14px;
+}
+
+.bb-checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: #111;
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+.bb-checkout-btn:hover { background: #333; }
+
+/* ---------------------------------------------------------------
+   STORE CREDIT (Webkul wallet app)
+   - The app renders #wk_pay_wallet at the bottom of the page.
+   - It is hidden everywhere by default, then JS moves it into
+     #bb-store-credit-slot (below Checkout) and only reveals it
+     when the customer's Store Credit Balance is greater than 0.
+   - Guests never get the slot, so it stays hidden for them.
+---------------------------------------------------------------- */
+#wk_pay_wallet {
+  display: none !important;
+}
+
+.bb-store-credit-slot {
+  display: none;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.bb-store-credit-slot.has-credit {
+  display: block;
+}
+
+.bb-store-credit-slot.has-credit #wk_pay_wallet {
+  display: block !important;
+  width: 100%;
+  margin: 0;
+}
+
+.bb-store-credit-slot .wk_store_credit {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #111;
+}
+
+.bb-store-credit-slot .wk_store_label_span {
+  font-size: 13px;
+  color: #444;
+}
+
+.bb-store-credit-slot #wk_pay_wallet_button {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.bb-store-credit-slot .err_show {
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.bb-empty-cart {
+  padding: 60px 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.bb-empty-cart a {
+  color: #111;
+  text-decoration: underline;
+}
+
+.free-sample-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  width: 100%;
+}
+
+.free-sample-section--locked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .bb-cart-page {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+  }
+
+  .bb-cart-left {
+    padding: 20px 16px;
+    width: 100%;
+    order: 1;
+  }
+
+  .bb-cart-right {
+    padding: 20px 16px;
+    position: static;
+    width: 100%;
+    min-height: auto;
+    align-items: stretch;
+    order: 2;
+  }
+
+  .bb-cart-item {
+    grid-template-columns: 64px 1fr auto;
+    gap: 10px;
+  }
+
+  .bb-item-image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .bb-item-right {
+    min-height: 80px;
+  }
+
+  .bb-item-name { font-size: 13px; }
+  .bb-item-meta { font-size: 12px; }
+  .bb-item-price { font-size: 13px; }
+  .bb-cart-title { font-size: 22px; }
+
+  .bb-also-like-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .bb-order-summary-title { text-align: center; }
+
+  .bb-summary-rows,
+  .bb-checkout-btn,
+  .bb-store-credit-slot,
+  .free-sample-section {
+    width: 100%;
+  }
+
+  .free-sample-section select {
+    width: 100%;
+  }
+
+  .bb-cart-page > .bb-also-like {
+    order: 3;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+</style>
+
+{% if cart.item_count == 0 %}
+  <div class="bb-empty-cart">
+    Your cart is empty. <a href="{{ routes.all_products_collection_url }}">Continue shopping</a>
+  </div>
+{% else %}
+
+<div class="bb-cart-wrapper">
+<form action="{{ routes.cart_url }}" method="post" id="cartform" data-wetheme-section-type="template--cart" data-wetheme-section-id="cart">
+  <input type="hidden" id="cart-link" value="{{ routes.cart_url }}" />
+
+  <div class="bb-cart-page">
+
+    <div class="bb-cart-left">
+      <div class="bb-cart-title">
+        Cart ({{ cart.item_count }})
+      </div>
+
+      <div class="bb-cart-items">
+        {% for item in cart.items %}
+        <div class="bb-cart-item" data-hulkapps-lineitem>
+
+          <div class="bb-item-image">
+            <a href="{{ item.product.url }}">
+              <img src="{{ item.image | img_url: '200x200' }}" alt="{{ item.title | escape }}" loading="lazy" />
+            </a>
+          </div>
+
+          <div class="bb-item-details">
+            <div class="bb-item-name">
+              <a href="{{ item.url }}" style="color:#111;text-decoration:none;">{{ item.product.title }}</a>
+            </div>
+            <div class="bb-item-meta">
+              {% unless item.variant.title contains 'Default' %}
+                {% for option in item.product.options %}
+                  {{ option }}: {{ item.variant.options[forloop.index0] }}<br/>
+                {% endfor %}
+              {% endunless %}
+            </div>
+
+            <div class='hulkapps-reminder' data-key='{{ item.key }}'></div>
+
+            <div class="bb-item-qty">
+              <button type="button" class="bb-qty-minus" data-line="{{ forloop.index }}" aria-label="Decrease quantity">−</button>
+              <input type="number" value="{{ item.quantity }}" min="1" data-line="{{ forloop.index }}" class="bb-qty-input" name="updates[]" />
+              <button type="button" class="bb-qty-plus" data-line="{{ forloop.index }}" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+
+          <div class="bb-item-right">
+            <a href="{{ routes.cart_url }}/change?line={{ forloop.index }}&quantity=0" class="bb-item-remove" aria-label="Remove item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+              </svg>
+            </a>
+            <div class="bb-item-price">
+              <span data-hulkapps-line-price data-key="{{ item.key }}">
+                {%- if item.original_line_price != item.final_line_price -%}
+                  <del>{{ item.original_line_price | money }}</del>
+                  <span class="money">{{ item.final_line_price | money }}</span>
+                {%- else -%}
+                  <span class="money">{{ item.original_line_price | money }}</span>
+                {%- endif -%}
+              </span>
+            </div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if settings.allow_note %}
+      <div class="bb-cart-note">
+        <label for="cart-note">Order note</label>
+        <textarea id="cart-note" name="note" placeholder="Add a note to your order...">{{ cart.note }}</textarea>
+      </div>
+      {% endif %}
+
+      <div class="bb-also-like">
+        <h3>You might also like</h3>
+        <div class="bb-also-like-grid" id="bb-also-like-grid">
+          <div style="font-size:13px;color:#999;">Loading recommendations...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bb-cart-right">
+      <div class="bb-order-summary-title">Order summary</div>
+
+      <div class="bb-summary-rows">
+        <div class="bb-summary-row">
+          <span>Shipping</span>
+          <span>TBD</span>
+        </div>
+        <div class="bb-summary-row">
+          <span>Taxes</span>
+          <span>TBD</span>
+        </div>
+        <div class="bb-summary-row total">
+          <span>Total</span>
+          <span>
+            {%- if cart.total_discount > 0 -%}
+              <del style="font-size:13px;font-weight:400;color:#999;margin-right:6px;">{{ cart.original_total_price | money }}</del>
+            {%- endif -%}
+            <span data-hulkapps-cart-total class="money">{{ cart.total_price | money }}</span>
+          </span>
+        </div>
+      </div>
+
+      <button type="submit" name="checkout" class="bb-checkout-btn">Checkout</button>
+
+      {% comment %}
+        Store credit slot — logged-in customers only. JS below moves the
+        app's #wk_pay_wallet block in here and shows it only when the
+        Store Credit Balance is greater than 0.
+      {% endcomment %}
+      {% if customer %}
+        <div id="bb-store-credit-slot" class="bb-store-credit-slot"></div>
+      {% endif %}
+
+      {% comment %}
+      {% if customer %}
+        {% assign customer_tags_downcase = customer.tags | join: ',' | downcase %}
+        {% if customer_tags_downcase contains 'wholesale' or customer.tax_exempt %}
+
+        {% assign total_qty = 0 %}
+        {% for item in cart.items %}
+          {% assign total_qty = total_qty | plus: item.quantity %}
+        {% endfor %}
+        {% assign dozens = total_qty | divided_by: 12 %}
+        {% if dozens > 5 %}{% assign sample_count = 5 %}{% else %}{% assign sample_count = dozens %}{% endif %}
+        {% assign sample_eligible = false %}
+        {% if sample_count >= 1 %}{% assign sample_eligible = true %}{% endif %}
+        {% assign next_dozen = total_qty | modulo: 12 %}
+        {% assign remaining = 12 | minus: next_dozen %}
+
+        <div id="free-sample-section" class="free-sample-section {% unless sample_eligible %}free-sample-section--locked{% endunless %}" data-sample-count="{{ sample_count }}">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+            <span style="font-size:13px;font-weight:500;color:#111;">🎁 Free Samples — 1 per Dozen, Up to 5</span>
+            {% if sample_eligible %}
+              <span style="background:#111;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;">{{ sample_count }} unlocked!</span>
+              {% if sample_count < 6 %}
+                <span style="font-size:12px;color:#888;">Add {{ remaining }} more for {{ sample_count | plus: 1 }}</span>
+              {% endif %}
+            {% else %}
+              <span style="font-size:12px;color:#888;">Add {{ remaining }} item(s) to unlock</span>
+            {% endif %}
+          </div>
+
+          <p style="font-size:12px;color:#666;margin-bottom:12px;">Select your free hat samples — choose style then color for each</p>
+
+          {% for i in (1..6) %}
+          <div class="free-sample-row sample-row-item" id="sample-row-{{ i }}" style="display:none;margin-bottom:10px;">
+            <label style="font-size:12px;font-weight:500;display:block;margin-bottom:4px;color:#111;">Sample {{ i }}</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <select class="free-sample-style" id="sample-style-{{ i }}" disabled style="flex:1;min-width:120px;padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-size:12px;background:#f2f2f0;color:#111;">
+                <option value="">— Style —</option>
+              </select>
+              <select class="free-sample-color" id="sample-color-{{ i }}" disabled style="flex:1;min-width:120px;padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-size:12px;background:#f2f2f0;color:#111;">
+                <option value="">— Color —</option>
+              </select>
+            </div>
+          </div>
+          {% endfor %}
+
+          <button type="button" id="save-samples-btn" style="margin-top:10px;width:100%;padding:9px;background:transparent;border:1px solid #111;color:#111;font-size:12px;letter-spacing:0.05em;cursor:pointer;border-radius:2px;" {% unless sample_eligible %}disabled{% endunless %}>Save sample selection</button>
+          <span id="samples-saved-msg" style="display:none;font-size:12px;color:green;margin-top:6px;">✓ Sample selection saved!</span>
+        </div>
+
+        {% endif %}
+      {% endif %}
+      {% endcomment %}
+
+    </div>
+  </div>
+</form>
+</div>
+
+<script type="application/json" id="initial-cart">
+  {{ cart | json }}
+</script>
+
+<script>
+(function() {
+
+  function updateCart(line, qty) {
+    fetch(window.Shopify.routes.root + 'cart/change.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        line: line,
+        quantity: qty
+      })
+    })
+    .then(function(response) {
+      if (!response.ok) {
+        return response.json().then(function(error) {
+          throw error;
+        });
+      }
+
+      return response.json();
+    })
+    .then(function(cart) {
+      window.location.reload();
+    })
+    .catch(function(error) {
+      console.error('Cart quantity update failed:', error);
+      alert('Unable to update cart quantity. Please try again.');
+    });
+  }
+
+  document.querySelectorAll('.bb-qty-minus').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var line = parseInt(this.getAttribute('data-line'), 10);
+      var input = document.querySelector(
+        '.bb-qty-input[data-line="' + line + '"]'
+      );
+
+      var val = Math.max(0, parseInt(input.value, 10) - 1);
+      input.value = val;
+
+      updateCart(line, val);
+    });
+  });
+
+  document.querySelectorAll('.bb-qty-plus').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var line = parseInt(this.getAttribute('data-line'), 10);
+      var input = document.querySelector(
+        '.bb-qty-input[data-line="' + line + '"]'
+      );
+
+      var val = parseInt(input.value, 10) + 1;
+      input.value = val;
+
+      updateCart(line, val);
+    });
+  });
+
+  document.querySelectorAll('.bb-qty-input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      var line = parseInt(this.getAttribute('data-line'), 10);
+      var qty = parseInt(this.value, 10);
+
+      if (isNaN(qty) || qty < 1) {
+        qty = 1;
+        this.value = 1;
+      }
+
+      updateCart(line, qty);
+    });
+  });
+
+
+  var cartData = JSON.parse(document.getElementById('initial-cart').textContent);
+  var productId = cartData.items && cartData.items[0] ? cartData.items[0].product_id : null;
+
+  if (productId) {
+    fetch('/recommendations/products.json?product_id=' + productId + '&limit=4')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var grid = document.getElementById('bb-also-like-grid');
+        if (!grid) return;
+        if (!data.products || data.products.length === 0) {
+          grid.closest('.bb-also-like').style.display = 'none';
+          return;
+        }
+        grid.innerHTML = data.products.map(function(p) {
+          var img = p.featured_image ? p.featured_image : '';
+          var price = p.price_min ? ('$' + (p.price_min / 100).toFixed(2)) : '';
+          return '<a href="/products/' + p.handle + '" class="bb-also-like-item">' +
+            (img ? '<img class="bb-also-like-img" src="' + img + '" alt="' + p.title + '" loading="lazy"/>' : '<div class="bb-also-like-img" style="background:#f5f5f5;"></div>') +
+            '<div class="bb-also-like-name">' + p.title + '</div>' +
+            '<div class="bb-also-like-price">' + price + ' / pc</div>' +
+            '</a>';
+        }).join('');
+      })
+      .catch(function() {
+        var grid = document.getElementById('bb-also-like-grid');
+        if (grid) grid.closest('.bb-also-like').style.display = 'none';
+      });
+  } else {
+    var grid = document.getElementById('bb-also-like-grid');
+    if (grid) grid.closest('.bb-also-like').style.display = 'none';
+  }
+
+  /* FREE SAMPLE PROGRAM PAUSED
+  var sampleProducts = [
+    { handle: '5g', title: '5G Sequin Hat', colors: ['BLACK', 'WHITE', 'TAN'] },
+    { handle: '5rs', title: '5RS - 5 Panel Leather Cap', colors: ['BLACK', 'KHAKI', 'GRAY'] },
+    { handle: '5sstg', title: '5SSTG - Suede Satin Gilding', colors: ['BLK/BLK/AQUA', 'BLK/BLK/N.GREEN', 'BLK/BLK/L.GREY'] },
+    { handle: 'tcrs', title: 'TCRS - Leather Bill TC', colors: ['BLACK', 'BLACK/KHAKI', 'BLACK/OLIVE'] },
+    { handle: 'tcsts-satin-snapback-with-suede-bills', title: 'TCSTS - Satin Snapback Suede Bills', colors: ['SATIN-NAVY', 'BLACK', 'BLACK/RED'] }
+  ];
+
+  var section = document.getElementById('free-sample-section');
+  if (!section) return;
+
+  var sampleCount = parseInt(section.getAttribute('data-sample-count')) || 0;
+
+  for (var i = 1; i <= 6; i++) {
+    var row = document.getElementById('sample-row-' + i);
+    if (!row) continue;
+    if (i <= sampleCount) {
+      row.style.display = 'block';
+      var styleSel = document.getElementById('sample-style-' + i);
+      if (styleSel) {
+        styleSel.disabled = false;
+        sampleProducts.forEach(function(p) {
+          var opt = document.createElement('option');
+          opt.value = p.handle;
+          opt.textContent = p.title;
+          styleSel.appendChild(opt);
+        });
+        (function(num) {
+  document.getElementById('sample-style-' + num).addEventListener('change', function() {
+    var colorSel = document.getElementById('sample-color-' + num);
+    colorSel.innerHTML = '<option value="">— Color —</option>';
+    colorSel.disabled = true;
+    if (!this.value) return;
+    var handle = this.value;
+    var prod = sampleProducts.find(function(p) { return p.handle === handle; });
+    if (!prod) return;
+    prod.colors.forEach(function(c) {
+      var o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      colorSel.appendChild(o);
+    });
+    colorSel.disabled = false;
+
+    // After changing this row, update all other dropdowns
+    updateAllStyleDropdowns();
+  });
+})(i);
+      }
+    } else {
+      row.style.display = 'none';
+    }
+  }
+function getSelectedHandles(excludeRow) {
+  var selected = [];
+  for (var r = 1; r <= sampleCount; r++) {
+    if (r === excludeRow) continue;
+    var s = document.getElementById('sample-style-' + r);
+    if (s && s.value) selected.push(s.value);
+  }
+  return selected;
+}
+
+function updateAllStyleDropdowns() {
+  for (var r = 1; r <= sampleCount; r++) {
+    var styleSel = document.getElementById('sample-style-' + r);
+    if (!styleSel) continue;
+    var currentVal = styleSel.value;
+    var takenHandles = getSelectedHandles(r);
+
+    // Update each option — disable/grey out if taken by another row
+    for (var o = 0; o < styleSel.options.length; o++) {
+      var opt = styleSel.options[o];
+      if (!opt.value) continue; // skip placeholder
+      if (takenHandles.indexOf(opt.value) !== -1) {
+        opt.disabled = true;
+        opt.style.color = '#ccc';
+      } else {
+        opt.disabled = false;
+        opt.style.color = '#111';
+      }
+    }
+
+    // If current selection was just taken by another row, reset this row
+    if (currentVal && takenHandles.indexOf(currentVal) !== -1) {
+      styleSel.value = '';
+      var colorSel = document.getElementById('sample-color-' + r);
+      if (colorSel) {
+        colorSel.innerHTML = '<option value="">— Color —</option>';
+        colorSel.disabled = true;
+      }
+    }
+  }
+}
+
+// Run once on load to init state
+updateAllStyleDropdowns();
+  var saveBtn = document.getElementById('save-samples-btn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+      var lines = [];
+      for (var i = 1; i <= sampleCount; i++) {
+        var s = document.getElementById('sample-style-' + i);
+        var c = document.getElementById('sample-color-' + i);
+        if (s && c && s.value && c.value) {
+          lines.push({ num: i, text: s.options[s.selectedIndex].text + ' - ' + c.value + ' (x1)' });
+        }
+      }
+      if (!lines.length) { alert('Please select at least one sample.'); return; }
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
+      var attrs = {};
+      lines.forEach(function(l) { attrs['_free_sample_' + l.num] = l.text; });
+      for (var i = 1; i <= 6; i++) { if (!attrs['_free_sample_' + i]) attrs['_free_sample_' + i] = ''; }
+      fetch('/cart/update.js', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ attributes: attrs })
+      }).then(function() {
+        saveBtn.style.display = 'none';
+        var msg = document.getElementById('samples-saved-msg');
+        if (msg) msg.style.display = 'block';
+      }).catch(function() {
+        saveBtn.textContent = 'Save sample selection';
+        saveBtn.disabled = false;
+      });
+    });
+  }
+  END FREE SAMPLE PROGRAM */
+})();
+</script>
+
+<script>
+(function(){
+  var mq = window.matchMedia('(max-width: 900px)');
+  var page = document.querySelector('.bb-cart-page');
+  var rec = document.querySelector('.bb-also-like');
+  var left = document.querySelector('.bb-cart-left');
+  if (!page || !rec || !left) return;
+  function place(){
+    if (mq.matches) {
+      if (rec.parentElement !== page) page.appendChild(rec);   // mobile: below summary
+    } else {
+      if (rec.parentElement !== left) left.appendChild(rec);   // desktop: original spot
+    }
+  }
+  place();
+  if (mq.addEventListener) { mq.addEventListener('change', place); }
+  else if (mq.addListener) { mq.addListener(place); }
+})();
+</script>
+
+<script>
+/* ---------------------------------------------------------------
+   STORE CREDIT: move the wallet app below Checkout, and only show it
+   when the customer's balance is greater than 0.
+   The app injects #wk_pay_wallet asynchronously, so a
+   MutationObserver watches for it (and for balance text updates).
+---------------------------------------------------------------- */
+(function(){
+  var slot = document.getElementById('bb-store-credit-slot');
+  if (!slot) return; // guest — wallet stays hidden by CSS
+
+  function getBalance(wallet) {
+    var el = wallet.querySelector('.wk_store_label_span');
+    if (!el) return 0;
+    var match = el.textContent.replace(/,/g, '').match(/(\d+(?:\.\d+)?)/);
+    return match ? parseFloat(match[1]) : 0;
+  }
+
+  function sync() {
+    var wallet = document.getElementById('wk_pay_wallet');
+    if (!wallet) return;
+    if (wallet.parentElement !== slot) slot.appendChild(wallet);
+    if (getBalance(wallet) > 0) {
+      slot.classList.add('has-credit');
+    } else {
+      slot.classList.remove('has-credit');
+    }
+  }
+
+  sync();
+
+  var timer;
+  var observer = new MutationObserver(function(){
+    clearTimeout(timer);
+    timer = setTimeout(sync, 50);
+  });
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+})();
+</script>
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Cart template",
+    "class": "container cart-page-template",
+    "settings": []
+  }
+{% endschema %}

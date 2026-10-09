@@ -1,0 +1,56 @@
+<div class="shipping-returns">
+  <div class="shipping-returns__item">
+    <h3>🚚 Shipping</h3>
+    <p>
+      Most orders ship within one business day from our Southern California warehouse.
+    </p>
+  </div>
+
+  <div class="shipping-returns__item">
+    <h3>🔁 Free Return & Exchanges</h3>
+    <p>
+      We offer exchanges/returns within 14 days of purchase. Items must be unused and in original condition.
+    </p>
+  </div>
+</div>
+
+<style>
+.shipping-returns {
+  display: flex;
+  gap: 40px;
+  margin-top: 24px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.shipping-returns__item {
+  flex: 1;
+}
+
+.shipping-returns__item h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.shipping-returns__item p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Mobile */
+@media screen and (max-width: 749px) {
+  .shipping-returns {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Shipping & Returns",
+  "settings": []
+}
+{% endschema %}

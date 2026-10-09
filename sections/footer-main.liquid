@@ -1,0 +1,480 @@
+{% assign footer_item_width = '' %}
+{% case section.blocks.size %}
+{% when 1 %}
+	{% assign footer_item_width = 'col-md-12 col-sm-12' %}
+{% when 2 %}
+	{% assign footer_item_width = 'col-md-6 col-sm-12' %}
+{% when 3 %}
+	{% assign footer_item_width = 'col-md-4 col-sm-12' %}
+{% when 4 %}
+    {% assign footer_item_width = 'col-md-3 col-sm-12' %}
+{% endcase %}
+
+<footer data-wetheme-section-type="footer-main" data-wetheme-section-id="{{ section.id }}">
+	<div class="container">
+		<div class="row footer-alignment--{{ section.settings.alignment }}">
+
+			{% for block in section.blocks %}
+
+				{% case block.type %}
+
+					{% when 'menu' %}
+
+						{%- assign footer_linklist = block.settings.footer_linklist -%}
+						<div class="{{ footer_item_width }} links-footer footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+							<h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+								{{ block.settings.menu_title | escape }}
+								<span class="footer-collapsible__icon" aria-hidden="true">+</span>
+							</h3>
+							<div class="footer-collapsible__content">
+        					{% if linklists[footer_linklist].links.size > 0 %}
+                            <nav>
+                                <ul>
+                                    {% for link in linklists[footer_linklist].links %}
+                                        <li {% if link.object.tags and link.object.tags.size > 0 %} class="children"{% endif %}>
+                                            <a href="{{link.url}}">{{link.title}}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+							{% endif %}
+							</div>
+						</div>
+
+					{% when 'text' %}
+
+						<div class="{{ footer_item_width }} content-footer footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+                            <h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+                                {{ block.settings.title | escape }}
+                                <span class="footer-collapsible__icon" aria-hidden="true">+</span>
+                            </h3>
+                            <div class="footer-collapsible__content">
+                                {% if block.settings.image != blank %}
+                                    <div style="width: {{ block.settings.image_max_width }}%; {% if section.settings.alignment == 'center' %}margin: 0 auto;{% endif %} margin-bottom: 12px;">
+                                        {% render 'responsive-image' with block.settings.image, alt: block.settings.image.alt %}
+                                    </div>
+                                {% endif %}
+                                <div class="rte footer-article">{{ block.settings.richtext }}</div>
+                            </div>
+                        </div>
+
+
+                    {% when 'follow_on_shop' %}
+
+						<div class="{{ footer_item_width }} content-footer footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+							<h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+								{{ block.settings.title | escape }}
+								<span class="footer-collapsible__icon" aria-hidden="true">+</span>
+							</h3>
+							<div class="footer-collapsible__content">
+                            {% if shop.features.follow_on_shop? %}
+                                <div class="footer-article">
+                                    {{ shop | login_button: action: 'follow' }}
+                                </div>
+                            {% endif %}
+							</div>
+						</div>
+
+					{% when 'newsletter' %}
+
+						<div class="{{ footer_item_width }} mailing-list-footer footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+							<h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+								{{ block.settings.menu_title | escape }}
+								<span class="footer-collapsible__icon" aria-hidden="true">+</span>
+							</h3>
+							<div class="footer-collapsible__content">
+								{% if block.settings.footer_newsletter_description != empty %}
+									<div class="rte">{{ block.settings.footer_newsletter_description }}</div>
+								{% endif %}
+								{% render 'newsletter-form' %}
+							</div>
+						</div>
+
+					{% when 'social' %}
+
+						<div class="{{ footer_item_width }} footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+							<h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+								{{ block.settings.menu_title | escape }}
+								<span class="footer-collapsible__icon" aria-hidden="true">+</span>
+							</h3>
+							<div class="footer-collapsible__content">
+								<div class="footer__social-icons">
+									{% render 'social-links' with class, class: 'footer-block' %}
+								</div>
+							</div>
+						</div>
+
+                    {% when 'image' %}
+                            <style>
+                                .footer-image-id--{{ block.id }} img {
+                                    width: {{ block.settings.image_max_width }}%;
+                                }
+                            </style>
+
+							<div class="{{ footer_item_width }} footer-image-id--{{ block.id }} image-footer footer-block--wrapper footer-collapsible" {{ block.shopify_attributes }}>
+
+								{% if block.settings.title != '' %}
+									<h3 class="type-subheading type-subheading--1 footer-collapsible__heading">
+										{{ block.settings.title }}
+										<span class="footer-collapsible__icon" aria-hidden="true">+</span>
+									</h3>
+								{% endif %}
+
+								<div class="footer-collapsible__content">
+									{% if block.settings.link != blank and block.settings.image != blank %}
+										<a href="{{ block.settings.link }}">
+									{% elsif block.settings.image != blank %}
+										<div class="image-bar__item">
+									{% else %}
+										<div class="image-bar__item">
+									{% endif %}
+									<div class="image-bar__content">
+										{% if block.settings.image == blank %}
+                                            <div style="width: {{ block.settings.image_max_width }}%;{% if section.settings.alignment == 'center' %} margin: 0 auto;{% endif %}">
+                                                {{ 'image' | placeholder_svg_tag: 'icon--placeholder' }}
+                                            </div>
+                                        {% else %}
+                                            <div {% if section.settings.alignment == 'left' %}style="display: flex;"{% endif %}>
+                                                {% capture alt %}{{ block.settings.image.alt }}{% endcapture %}
+                                                {% render 'responsive-image' with block.settings.image, alt: alt %}
+                                            </div>
+                                        {% endif %}
+
+									</div>
+									{% if block.settings.link != blank and block.settings.image != blank %}
+										</a>
+									{% else %}
+										</div>
+									{% endif %}
+								</div>
+
+							</div>
+
+				{% endcase %}
+
+			{% endfor %}
+
+		</div>
+	</div>
+</footer>
+
+<style>
+@media (max-width: 768px) {
+  .footer-collapsible .type-subheading,
+  .footer-collapsible h3 {
+    padding: 0 0 12px 0 !important;
+    margin: 0 !important;
+  }
+
+  .footer-collapsible__icon {
+    display: inline-block;
+    float: right;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  .footer-collapsible__heading {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 0 !important;
+    user-select: none;
+    font-size: 15px !important;
+    font-weight: bold !important;
+  }
+
+  /* Modified to handle CSS state-driven display */
+  .footer-collapsible__content {
+    display: none;
+    padding-top: 12px;
+    padding-bottom: 4px;
+  }
+
+  .footer-collapsible.is-open .footer-collapsible__content {
+    display: block !important;
+  }
+
+  .footer-collapsible.is-open .footer-collapsible__icon {
+    transform: rotate(45deg);
+  }
+}
+
+@media (min-width: 769px) {
+  .footer-collapsible__icon {
+    display: none;
+  }
+
+  .footer-collapsible__content {
+    display: block !important;
+  }
+}
+</style>
+
+<script>
+(function() {
+  function handleFooterClick() {
+    // Only allow clicking to toggle if we are actually on mobile screen widths
+    if (window.innerWidth > 768) return;
+
+    var parent = this.closest('.footer-collapsible');
+    if (!parent) return;
+    
+    var isOpen = parent.classList.contains('is-open');
+    
+    // Close other open tabs (Accordion effect)
+    document.querySelectorAll('.footer-collapsible.is-open').forEach(function(el) {
+      if (el !== parent) {
+        el.classList.remove('is-open');
+      }
+    });
+    
+    // Toggle current tab
+    if (!isOpen) {
+      parent.classList.add('is-open');
+    } else {
+      parent.classList.remove('is-open');
+    }
+  }
+
+  function initFooterCollapsible() {
+    var headings = document.querySelectorAll('.footer-collapsible__heading');
+    headings.forEach(function(heading) {
+      // Remove any existing event listeners to prevent duplicate triggers
+      heading.removeEventListener('click', handleFooterClick);
+      heading.addEventListener('click', handleFooterClick);
+    });
+  }
+
+  // Run on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterCollapsible);
+  } else {
+    initFooterCollapsible();
+  }
+
+  // Handle window resizing cleanly without inline style conflicts
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+      document.querySelectorAll('.footer-collapsible').forEach(function(el) {
+        el.classList.remove('is-open');
+      });
+    }
+  });
+})();
+</script>
+
+{% style %}
+  @media (max-width: 768px) {
+    {% if section.settings.alignment == 'center' %}
+      footer #newsletter-wrapper:not(.password-form#newsletter-wrapper) input {
+        margin-left: 55px;
+      }
+    {% else %}
+      footer #newsletter-wrapper:not(.password-form#newsletter-wrapper) {
+        justify-content: flex-start;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+{% schema %}
+{
+    "name": "Footer main",
+    "max_blocks": 4,
+    "settings": [
+        {
+            "type": "select",
+            "id": "alignment",
+            "label": "Alignment",
+            "default": "center",
+            "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "center",
+                        "label": "Center"
+                    }
+                ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Text",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "range",
+                    "id": "image_max_width",
+                    "min": 10,
+                    "max": 100,
+                    "step": 5,
+                    "unit": "px",
+                    "label": "Image width",
+                    "default": 70
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Contact us"      
+                },
+                {
+                    "type": "richtext",
+                    "id": "richtext",
+                    "label": "Text",
+                    "default": "<p>Share store details, promotions, or brand content with your customers.</p>"
+                }
+            ]
+        },
+        {
+            "type": "menu",
+            "name": "Navigation",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "menu_title",
+                    "label": "Heading",
+                    "default": "Links",
+                },
+                {
+                    "type": "link_list",
+                    "id": "footer_linklist",
+                    "label": "Footer menu",
+                    "default": "main-menu"
+                }
+            ]
+        },
+        {
+            "type": "newsletter",
+            "name": "Newsletter",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "menu_title",
+                    "label": "Heading",
+                    "default": "Join our Mailing List",
+                },
+                {
+                    "type": "richtext",
+                    "id": "footer_newsletter_description",
+                    "label": "Newsletter description"
+                }
+            ]
+        },
+        {
+            "type": "social",
+            "name": "Social icons",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "menu_title",
+                    "label": "Heading",
+                    "default": "Get connected"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Edit your social media settings and accounts in Theme settings"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                },
+                {
+                    "type": "range",
+                    "id": "image_max_width",
+                    "min": 10,
+                    "max": 100,
+                    "step": 10,
+                    "unit": "%",
+                    "label": "Width",
+                    "default": 70
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "info": "Optional"
+                }
+            ]
+        },
+        {
+            "type": "follow_on_shop",
+            "name": "Follow on Shop",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph",
+                    "content": "Display follow button for your storefront on the Shop app. [Learn more](https://help.shopify.com/en/manual/online-store/themes/customizing-themes/follow-on-shop)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Follow us on the Shop app"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "blocks": [
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Contact us",
+                    "richtext": "<p>Share store details, promotions, or brand content with your customers.<\/p>"
+                }
+            },
+            {
+                "type": "menu",
+                "settings": {
+                    "menu_title": "Links",
+                    "footer_linklist": "main-menu"
+                }
+            },
+            {
+                "type": "newsletter",
+                "settings": {
+                    "menu_title": "Join our Mailing List",
+                    "footer_newsletter_description": ""
+                }
+            }
+        ]
+    }
+}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'social-links' with class: 'footer-block' %}"
+  to: "{% render 'social-links' with class, class: 'footer-block' %}"
+  position: 4830..4891
+{%- endcomment -%}
